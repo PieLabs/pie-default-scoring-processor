@@ -17,13 +17,13 @@ export default class PieDefaultScoringProcessor {
     const points = this._sumOfWeightedScores(componentScores);
     const summary = this._makeSummary(scoringType, maxPoints, points);
     return {
-      "summary": summary,
+      summary,
       "components": componentScores
     }
   }
 
   _isComponentScoreable(compJson, compSession, compOutcome) {
-    return compOutcome && compOutcome.score !== undefined;
+    return compOutcome && compOutcome.hasOwnProperty('score');
   }
 
   _getScoringType(item, defaultScoringType) {
@@ -63,7 +63,7 @@ export default class PieDefaultScoringProcessor {
     const results = {};
     for (let id in scoreableComponents) {
       const weight = weights[id];
-      const score = outcomes[id].score || 0;
+      const score = outcomes.components[id].score || 0;
       const weightedScore = weight * score;
       results[id] = {
         weight: weight,
@@ -104,9 +104,9 @@ export default class PieDefaultScoringProcessor {
       percentage = Math.round(points * 1000 / maxPoints) / 10;
     }
     return {
-      "maxPoints" : maxPoints,
-      "points" : points,
-      "percentage" : percentage
+      maxPoints,
+      points,
+      percentage
     };
   }
 }

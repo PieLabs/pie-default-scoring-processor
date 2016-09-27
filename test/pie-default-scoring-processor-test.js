@@ -15,6 +15,37 @@ describe('PieDefaultScoringProcessor', () => {
     done();
   });
 
+  describe('score', () => {
+    it('should calculate the score for all scoreable components', () => {
+      const item = {
+        'components': [
+          {
+            'id': '1'
+          },
+          {
+            'id': '2'
+          }
+        ]
+      }
+      const sessions = {
+        'components': {}
+      }
+      const outcomes = {
+        'components': {
+          '1': {
+            'score': 1
+          }
+        }
+      }
+      let result = processor.score(item, sessions, outcomes);
+      result.summary.should.eql({
+        maxPoints: 1,
+        percentage: 100,
+        points: 1
+      });
+    });
+  });
+
   describe('_getScoringType', () => {
     it('should return WEIGHTED when no scoring type is defined', () => {
       const scoringType = processor._getScoringType({});
@@ -63,8 +94,8 @@ describe('PieDefaultScoringProcessor', () => {
       }
       const outcomes = {
         'components': {
-          '1' : {
-            'score' : 1
+          '1': {
+            'score': 1
           }
         }
       }
@@ -121,14 +152,16 @@ describe('PieDefaultScoringProcessor', () => {
         '3': 3
       }
       const outcomes = {
-        '1': {
-          score: 1
-        },
-        '2': {
-          score: 2
-        },
-        '3': {
-          score: 3
+        'components': {
+          '1': {
+            score: 1
+          },
+          '2': {
+            score: 2
+          },
+          '3': {
+            score: 3
+          }
         }
       }
       const componentScores = processor._getComponentScores(scoreableComponents, weights, outcomes);
