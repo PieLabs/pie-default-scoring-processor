@@ -27,26 +27,23 @@ export default class PieDefaultScoringProcessor {
   }
 
   _getScoringType(item, defaultScoringType) {
-    var scoringType = null;
+    let scoringType = null;
     if (item && item.config && item.config.scoringType) {
       scoringType = item.config.scoringType;
     }
-    switch (scoringType) {
-      case ScoringType.WEIGHTED:
-      case ScoringType.ALL_OR_NOTHING:
-        return scoringType;
-      default:
-        return ScoringType.WEIGHTED;
+    if(ScoringType.isValidValue(scoringType)){
+      return scoringType
     }
+    return ScoringType.WEIGHTED;
   }
 
   _getScoreableComponents(item, sessions, outcomes) {
-    var results = {};
-    for (var i = 0; i < item.components.length; i++) {
-      let compJson = item.components[i];
-      let compId = compJson.id;
-      let compSession = sessions.components[compId] || {};
-      let compOutcome = outcomes.components[compId] || {};
+    const results = {};
+    for (let i = 0; i < item.components.length; i++) {
+      const compJson = item.components[i];
+      const compId = compJson.id;
+      const compSession = sessions.components[compId] || {};
+      const compOutcome = outcomes.components[compId] || {};
       if (this._isComponentScoreable(compJson, compSession, compOutcome)) {
         results[compId] = compJson;
       }
@@ -55,19 +52,19 @@ export default class PieDefaultScoringProcessor {
   }
 
   _getWeights(scoreableComponents) {
-    var results = {};
-    for (var id in scoreableComponents) {
+    const results = {};
+    for (let id in scoreableComponents) {
       results[id] = scoreableComponents[id].weight || 1;
     }
     return results;
   }
 
   _getComponentScores(scoreableComponents, weights, outcomes) {
-    var results = {};
-    for (var id in scoreableComponents) {
-      var weight = weights[id];
-      var score = outcomes[id].score || 0;
-      var weightedScore = weight * score;
+    const results = {};
+    for (let id in scoreableComponents) {
+      const weight = weights[id];
+      const score = outcomes[id].score || 0;
+      const weightedScore = weight * score;
       results[id] = {
         weight: weight,
         score: score,
@@ -78,16 +75,16 @@ export default class PieDefaultScoringProcessor {
   }
 
   _sumOfWeights(weights){
-    var result = 0;
-    for (var id in weights) {
+    let result = 0;
+    for (let id in weights) {
       result += weights[id];
     }
     return result;
   }
 
   _sumOfWeightedScores(componentScores){
-    var result = 0;
-    for (var id in componentScores) {
+    let result = 0;
+    for (let id in componentScores) {
       result += componentScores[id].weightedScore;
     }
     return result;
