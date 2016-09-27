@@ -1,9 +1,7 @@
-//isscoreable
-
-//isComponentScoreable(compType, comp, session, outcome){
-//  return true;
-//}
-
+//is using the components controller isScoreable method
+//to find out if the component should be scored
+//i wonder if we can use the outcomes instead?
+//no outcome -> is not scoreable
 
 import ScoringType from "./pie-scoring-type"
 
