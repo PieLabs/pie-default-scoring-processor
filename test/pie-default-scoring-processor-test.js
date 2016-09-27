@@ -16,7 +16,7 @@ describe('PieDefaultScoringProcessor', () => {
   });
 
   describe('score', () => {
-    it('should calculate the score for all scoreable components', () => {
+    it('should calculate the score for all components with outcome', () => {
       const item = {
         'components': [
           {
