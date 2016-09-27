@@ -8,15 +8,10 @@ import ScoringType from '../src/pie-scoring-type';
 
 describe('PieDefaultScoringProcessor', () => {
 
-  let clientSideController, processor;
+  let processor;
 
   beforeEach((done) => {
-    clientSideController = {
-      isScoreable: function(compJson) {
-        return compJson.isScoreable;
-      }
-    }
-    processor = new ScoringProcessor(clientSideController);
+    processor = new ScoringProcessor();
     done();
   });
 
@@ -52,16 +47,14 @@ describe('PieDefaultScoringProcessor', () => {
   });
 
   describe('_getScoreableComponents', () => {
-    it('should return all components with isScoreable=true', () => {
+    it('should return all components which we have an outcome for', () => {
       let item = {
         'components': [
           {
-            'id': '1',
-            'isScoreable': true
+            'id': '1'
           },
           {
-            'id': '2',
-            'isScoreable': false
+            'id': '2'
           }
         ]
       }
@@ -69,13 +62,16 @@ describe('PieDefaultScoringProcessor', () => {
         'components': {}
       }
       let outcomes = {
-        'components': {}
+        'components': {
+          '1' : {
+            'score' : 1
+          }
+        }
       }
       let scoreableComponents = processor._getScoreableComponents(item, sessions, outcomes);
       scoreableComponents.should.eql({
         '1': {
-          'id': '1',
-          'isScoreable': true
+          'id': '1'
         }
       });
     });

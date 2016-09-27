@@ -1,15 +1,12 @@
-//is using the components controller isScoreable method
-//to find out if the component should be scored
-//i wonder if we can use the outcomes instead?
-//no outcome -> is not scoreable
-
 import ScoringType from "./pie-scoring-type"
 
+/**
+ * This is a reimplementation of the container scoring processor
+ * with one important difference: We are not using controller.isScoreable
+ * but checking the outcome for a component to find out whether it is
+ * scoreable or not
+ */
 export default class PieDefaultScoringProcessor {
-
-  constructor(clientSideController){
-    this._clientSideController = clientSideController;
-  }
 
   score(item, sessions, outcomes) {
     const scoringType = this._getScoringType(item);
@@ -26,7 +23,7 @@ export default class PieDefaultScoringProcessor {
   }
 
   _isComponentScoreable(compJson, compSession, compOutcome) {
-    return this._clientSideController.isScoreable(compJson, compSession, compOutcome);
+    return compOutcome && compOutcome.score !== undefined;
   }
 
   _getScoringType(item, defaultScoringType) {
