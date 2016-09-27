@@ -18,7 +18,6 @@ export default class PieDefaultScoringProcessor {
     const componentScores = this._getComponentScores(scoreableComponents, weights, outcomes);
     const maxPoints = this._sumOfWeights(weights);
     const points = this._sumOfWeightedScores(componentScores);
-    const percentage = maxPoints ? Math.round(points * 1000 / maxPoints) / 10 : 0;
     const summary = this._makeSummary(scoringType, maxPoints, points);
     return {
       "summary": summary,
