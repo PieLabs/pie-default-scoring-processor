@@ -8,6 +8,13 @@ import ScoringType from "./pie-scoring-type"
  */
 export default class PieDefaultScoringProcessor {
 
+  /**
+   * Calculate the weighted or allOrNothing score
+   * @param item {scoringType: 'weighted', components:[{id:'1', weight: 3, ...}, {id:'2', weight: 5, ...}]}
+   * @param sessions [{id: '1', ...}, {id: '2', ...}]
+   * @param outcomes [{id: '1', score: 1}, {id: '2', score: 2}]
+   * @returns {{summary: ({maxPoints, points, percentage}|*), components: *}}
+   */
   score(item, sessions, outcomes) {
     const scoringType = this._getScoringType(item);
     const scoreableComponents = this._getScoreableComponents(item, sessions, outcomes);
@@ -28,8 +35,8 @@ export default class PieDefaultScoringProcessor {
 
   _getScoringType(item, defaultScoringType) {
     let scoringType = null;
-    if (item && item.config && item.config.scoringType) {
-      scoringType = item.config.scoringType;
+    if (item && item.scoringType) {
+      scoringType = item.scoringType;
     }
     if(ScoringType.isValidValue(scoringType)){
       return scoringType
@@ -42,8 +49,8 @@ export default class PieDefaultScoringProcessor {
     for (let i = 0; i < item.components.length; i++) {
       const compJson = item.components[i];
       const compId = compJson.id;
-      const compSession = sessions.components[compId] || {};
-      const compOutcome = outcomes.components[compId] || {};
+      const compSession = this._findById(sessions, compId, {});
+      const compOutcome = this._findById(outcomes, compId, {});
       if (this._isComponentScoreable(compJson, compSession, compOutcome)) {
         results[compId] = compJson;
       }
@@ -63,7 +70,7 @@ export default class PieDefaultScoringProcessor {
     const results = {};
     for (let id in scoreableComponents) {
       const weight = weights[id];
-      const score = outcomes.components[id].score || 0;
+      const score = this._findById(outcomes, id, {}).score || 0;
       const weightedScore = weight * score;
       results[id] = {
         weight: weight,
@@ -108,5 +115,14 @@ export default class PieDefaultScoringProcessor {
       points,
       percentage
     };
+  }
+
+  _findById(col, id, defaultValue = null){
+    for(let i=0; i<col.length; i++){
+      if(col[i].id === id){
+        return col[i];
+      }
+    }
+    return defaultValue;
   }
 }

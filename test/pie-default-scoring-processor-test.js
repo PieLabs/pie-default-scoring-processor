@@ -27,16 +27,17 @@ describe('PieDefaultScoringProcessor', () => {
           }
         ]
       }
-      const sessions = {
-        'components': {}
-      }
-      const outcomes = {
-        'components': {
-          '1': {
-            'score': 1
-          }
+      const sessions = [
+        {
+          'id': '1'
         }
-      }
+      ]
+      const outcomes = [
+        {
+          'id': '1',
+          'score': 1
+        }
+      ]
       let result = processor.score(item, sessions, outcomes);
       result.summary.should.eql({
         maxPoints: 1,
@@ -53,25 +54,19 @@ describe('PieDefaultScoringProcessor', () => {
     });
     it('should return WEIGHTED when scoring type is invalid', () => {
       const scoringType = processor._getScoringType({
-        'config': {
-          'scoringType': 'invalid scoring type'
-        }
+        'scoringType': 'invalid scoring type'
       });
       scoringType.should.eql(ScoringType.WEIGHTED);
     });
     it('should return WEIGHTED when scoring type is WEIGHTED', () => {
       const scoringType = processor._getScoringType({
-        'config': {
-          'scoringType': ScoringType.WEIGHTED
-        }
+        'scoringType': ScoringType.WEIGHTED
       });
       scoringType.should.eql(ScoringType.WEIGHTED);
     });
     it('should return ALL_OR_NOTHING when scoring type is ALL_OR_NOTHING', () => {
       const scoringType = processor._getScoringType({
-        'config': {
-          'scoringType': ScoringType.ALL_OR_NOTHING
-        }
+        'scoringType': ScoringType.ALL_OR_NOTHING
       });
       scoringType.should.eql(ScoringType.ALL_OR_NOTHING);
     });
@@ -89,16 +84,17 @@ describe('PieDefaultScoringProcessor', () => {
           }
         ]
       }
-      const sessions = {
-        'components': {}
-      }
-      const outcomes = {
-        'components': {
-          '1': {
-            'score': 1
-          }
+      const sessions = [
+        {
+          'id': '1'
         }
-      }
+      ]
+      const outcomes = [
+        {
+          'id': '1',
+          'score': 1
+          }
+      ]
       const scoreableComponents = processor._getScoreableComponents(item, sessions, outcomes);
       scoreableComponents.should.eql({
         '1': {
@@ -151,19 +147,20 @@ describe('PieDefaultScoringProcessor', () => {
         '2': 2,
         '3': 3
       }
-      const outcomes = {
-        'components': {
-          '1': {
-            score: 1
+      const outcomes = [
+        {
+          'id': '1',
+          'score': 1
           },
-          '2': {
-            score: 2
+        {
+          'id': '2',
+          'score': 2
           },
-          '3': {
-            score: 3
+        {
+          'id': '3',
+          'score': 3
           }
-        }
-      }
+        ]
       const componentScores = processor._getComponentScores(scoreableComponents, weights, outcomes);
       componentScores.should.eql({
         '1': {
