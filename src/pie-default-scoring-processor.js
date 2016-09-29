@@ -70,7 +70,7 @@ export default class PieDefaultScoringProcessor {
     const results = {};
     for (let id in scoreableComponents) {
       const weight = weights[id];
-      const score = this._findById(outcomes, id, {}).score || 0;
+      const score = this._findById(outcomes, id, {}).score.scaled || 0;
       const weightedScore = weight * score;
       results[id] = {
         weight: weight,
