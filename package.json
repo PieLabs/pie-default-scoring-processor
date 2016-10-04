@@ -4,7 +4,8 @@
   "description": "A scoring processor which returns weighted or all-or-nothing scores",
   "main": "src/pie-default-scoring-processor.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register test"
+    "compile": "babel --presets es2015,react -d lib/ src/",
+    "test": "npm run compile && mocha --compilers js:babel-core/register test"
   },
   "repository": {
     "type": "git",

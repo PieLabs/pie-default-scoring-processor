@@ -3,8 +3,8 @@ chai.should();
 
 import sinon from 'sinon';
 
-import ScoringProcessor from '../src/pie-default-scoring-processor';
-import ScoringType from '../src/pie-scoring-type';
+import ScoringProcessor from '../lib/pie-default-scoring-processor';
+import ScoringType from '../lib/pie-scoring-type';
 
 describe('PieDefaultScoringProcessor', () => {
 
@@ -35,7 +35,9 @@ describe('PieDefaultScoringProcessor', () => {
       const outcomes = [
         {
           'id': '1',
-          'score': 1
+          'score': {
+            'scaled': 1
+          }
         }
       ]
       let result = processor.score(item, sessions, outcomes);
@@ -92,8 +94,10 @@ describe('PieDefaultScoringProcessor', () => {
       const outcomes = [
         {
           'id': '1',
-          'score': 1
+          'score': {
+            'scaled': 1
           }
+        }
       ]
       const scoreableComponents = processor._getScoreableComponents(item, sessions, outcomes);
       scoreableComponents.should.eql({
@@ -150,16 +154,22 @@ describe('PieDefaultScoringProcessor', () => {
       const outcomes = [
         {
           'id': '1',
-          'score': 1
-          },
+          'score': {
+            'scaled': 1
+          }
+        },
         {
           'id': '2',
-          'score': 2
-          },
+          'score': {
+            'scaled': 2
+          }
+        },
         {
           'id': '3',
-          'score': 3
+          'score': {
+            'scaled': 3
           }
+        }
         ]
       const componentScores = processor._getComponentScores(scoreableComponents, weights, outcomes);
       componentScores.should.eql({
