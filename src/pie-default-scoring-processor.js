@@ -46,8 +46,8 @@ export default class PieDefaultScoringProcessor {
 
   _getScoreableComponents(item, sessions, outcomes) {
     const results = {};
-    for (let i = 0; i < item.components.length; i++) {
-      const compJson = item.components[i];
+    for (let i = 0; i < item.pies.length; i++) {
+      const compJson = item.pies[i];
       const compId = compJson.id;
       const compSession = this._findById(sessions, compId, {});
       const compOutcome = this._findById(outcomes, compId, {});

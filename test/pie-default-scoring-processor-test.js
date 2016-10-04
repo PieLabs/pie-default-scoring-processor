@@ -18,7 +18,7 @@ describe('PieDefaultScoringProcessor', () => {
   describe('score', () => {
     it('should calculate the score for all components with outcome', () => {
       const item = {
-        'components': [
+        'pies': [
           {
             'id': '1'
           },
@@ -77,7 +77,7 @@ describe('PieDefaultScoringProcessor', () => {
   describe('_getScoreableComponents', () => {
     it('should return all components which we have an outcome for', () => {
       const item = {
-        'components': [
+        'pies': [
           {
             'id': '1'
           },
