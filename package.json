@@ -2,7 +2,7 @@
   "name": "pie-default-scoring-processor",
   "version": "1.0.0",
   "description": "A scoring processor which returns weighted or all-or-nothing scores",
-  "main": "src/pie-default-scoring-processor.js",
+  "main": "lib/pie-default-scoring-processor.js",
   "scripts": {
     "compile": "babel --presets es2015,react -d lib/ src/",
     "test": "npm run compile && mocha --compilers js:babel-core/register test"
