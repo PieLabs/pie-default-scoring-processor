@@ -41,10 +41,20 @@ describe('PieDefaultScoringProcessor', () => {
         }
       ]
       let result = processor.score(item, sessions, outcomes);
-      result.summary.should.eql({
-        maxPoints: 1,
-        percentage: 100,
-        points: 1
+      result.should.eql({
+        components: [
+          {
+            "id": "1",
+            "score": 1,
+            "weight": 1,
+            "weightedScore": 1,
+          }
+        ],
+        summary: {
+          maxPoints: 1,
+          percentage: 100,
+          points: 1
+        }
       });
     });
   });
@@ -172,23 +182,26 @@ describe('PieDefaultScoringProcessor', () => {
         }
         ]
       const componentScores = processor._getComponentScores(scoreableComponents, weights, outcomes);
-      componentScores.should.eql({
-        '1': {
+      componentScores.should.eql([
+        {
+          'id': '1',
           'score': 1,
           'weight': 1,
           'weightedScore': 1
         },
-        '2': {
+        {
+          'id': '2',
           'score': 2,
           'weight': 2,
           'weightedScore': 4
         },
-        '3': {
+        {
+          'id': '3',
           'score': 3,
           'weight': 3,
           'weightedScore': 9
         }
-      });
+      ]);
     });
   });
 
