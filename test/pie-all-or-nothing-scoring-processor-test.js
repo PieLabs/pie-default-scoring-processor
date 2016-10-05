@@ -3,10 +3,10 @@ chai.should();
 
 import sinon from 'sinon';
 
-import ScoringProcessor from '../lib/pie-default-scoring-processor';
+import ScoringProcessor from '../lib/pie-all-or-nothing-scoring-processor';
 import ScoringType from '../lib/pie-scoring-type';
 
-describe('PieDefaultScoringProcessor', () => {
+describe('PieAllOrNothingScoringProcessor', () => {
 
   let processor;
 
@@ -17,16 +17,15 @@ describe('PieDefaultScoringProcessor', () => {
 
   describe('score', () => {
     it('should calculate the score for all components with outcome', () => {
-      const item = {
-        'pies': [
-          {
-            'id': '1'
-          },
+      const pies = [
+        {
+          'id': '1'
+        },
           {
             'id': '2'
-          }
-        ]
-      }
+        }
+      ]
+
       const sessions = [
         {
           'id': '1'
@@ -40,7 +39,7 @@ describe('PieDefaultScoringProcessor', () => {
           }
         }
       ]
-      let result = processor.score(item, sessions, outcomes);
+      let result = processor.score(pies, sessions, outcomes);
       result.should.eql({
         components: [
           {
@@ -59,43 +58,14 @@ describe('PieDefaultScoringProcessor', () => {
     });
   });
 
-  describe('_getScoringType', () => {
-    it('should return WEIGHTED when no scoring type is defined', () => {
-      const scoringType = processor._getScoringType({});
-      scoringType.should.eql(ScoringType.WEIGHTED);
-    });
-    it('should return WEIGHTED when scoring type is invalid', () => {
-      const scoringType = processor._getScoringType({
-        'scoringType': 'invalid scoring type'
-      });
-      scoringType.should.eql(ScoringType.WEIGHTED);
-    });
-    it('should return WEIGHTED when scoring type is WEIGHTED', () => {
-      const scoringType = processor._getScoringType({
-        'scoringType': ScoringType.WEIGHTED
-      });
-      scoringType.should.eql(ScoringType.WEIGHTED);
-    });
-    it('should return ALL_OR_NOTHING when scoring type is ALL_OR_NOTHING', () => {
-      const scoringType = processor._getScoringType({
-        'scoringType': ScoringType.ALL_OR_NOTHING
-      });
-      scoringType.should.eql(ScoringType.ALL_OR_NOTHING);
-    });
-  });
-
   describe('_getScoreableComponents', () => {
     it('should return all components which we have an outcome for', () => {
-      const item = {
-        'pies': [
-          {
-            'id': '1'
-          },
-          {
-            'id': '2'
-          }
-        ]
-      }
+      const pies = [{
+        'id': '1'
+      }, {
+        'id': '2'
+      }]
+
       const sessions = [
         {
           'id': '1'
@@ -109,7 +79,7 @@ describe('PieDefaultScoringProcessor', () => {
           }
         }
       ]
-      const scoreableComponents = processor._getScoreableComponents(item, sessions, outcomes);
+      const scoreableComponents = processor._getScoreableComponents(pies, sessions, outcomes);
       scoreableComponents.should.eql({
         '1': {
           'id': '1'
@@ -180,7 +150,7 @@ describe('PieDefaultScoringProcessor', () => {
             'scaled': 3
           }
         }
-        ]
+      ]
       const componentScores = processor._getComponentScores(scoreableComponents, weights, outcomes);
       componentScores.should.eql([
         {
@@ -238,32 +208,20 @@ describe('PieDefaultScoringProcessor', () => {
   });
 
   describe('_makeSummary', () => {
-    describe('scoringType=allOrNothing', () => {
-      it('should return all, when points == maxPoints', () => {
-        const summary = processor._makeSummary(ScoringType.ALL_OR_NOTHING, 7, 7);
-        summary.should.eql({
-          maxPoints: 7,
-          points: 7,
-          percentage: 100
-        });
-      });
-      it('should return nothing, when points < maxPoints', () => {
-        const summary = processor._makeSummary(ScoringType.ALL_OR_NOTHING, 7, 6);
-        summary.should.eql({
-          maxPoints: 7,
-          points: 0,
-          percentage: 0
-        });
+    it('should return all, when points == maxPoints', () => {
+      const summary = processor._makeSummary(7, 7);
+      summary.should.eql({
+        maxPoints: 7,
+        points: 7,
+        percentage: 100
       });
     });
-    describe('scoringType=weighted', () => {
-      it('should return actual points', () => {
-        const summary = processor._makeSummary(ScoringType.WEIGHTED, 100, 71);
-        summary.should.eql({
-          maxPoints: 100,
-          points: 71,
-          percentage: 71.0
-        });
+    it('should return nothing, when points < maxPoints', () => {
+      const summary = processor._makeSummary(7, 6);
+      summary.should.eql({
+        maxPoints: 7,
+        points: 0,
+        percentage: 0
       });
     });
   });
