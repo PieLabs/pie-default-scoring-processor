@@ -1,5 +1,5 @@
 {
-  "name": "pie-default-scoring-processor",
+  "name": "pie-scoring",
   "version": "1.0.0",
   "description": "A scoring processor which returns weighted or all-or-nothing scores",
   "main": "lib/pie-scoring-processor-factory.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PieLabs/pie-default-scoring-processor.git"
+    "url": "git+https://github.com/PieLabs/pie-scoring.git"
   },
   "keywords": [
     "pie"
@@ -17,12 +17,13 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PieLabs/pie-default-scoring-processor/issues"
+    "url": "https://github.com/PieLabs/pie-scoring/issues"
   },
-  "homepage": "https://github.com/PieLabs/pie-default-scoring-processor#readme",
+  "homepage": "https://github.com/PieLabs/pie-scoring#readme",
   "dependencies": {
   },
   "devDependencies": {
+    "babel-core": "^6.14.0",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
     "chai": "^3.5.0",
