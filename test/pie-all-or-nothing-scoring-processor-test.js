@@ -21,8 +21,8 @@ describe('PieAllOrNothingScoringProcessor', () => {
         {
           'id': '1'
         },
-          {
-            'id': '2'
+        {
+          'id': '2'
         }
       ]
 
@@ -44,9 +44,7 @@ describe('PieAllOrNothingScoringProcessor', () => {
         components: [
           {
             "id": "1",
-            "score": 1,
-            "weight": 1,
-            "weightedScore": 1,
+            "score": 1
           }
         ],
         summary: {
@@ -88,48 +86,12 @@ describe('PieAllOrNothingScoringProcessor', () => {
     });
   });
 
-  describe('_getWeights', () => {
-    it('should return the weights of the components', () => {
-      const scoreableComponents = {
-        '1': {
-          'weight': 1
-        },
-        '2': {
-          'weight': 2
-        },
-        '3': {
-          'weight': 3
-        }
-      }
-      const weights = processor._getWeights(scoreableComponents);
-      weights.should.eql({
-        '1': 1,
-        '2': 2,
-        '3': 3
-      });
-    });
-    it('should return 1 as the default weight', () => {
-      const scoreableComponents = {
-        'componentWithoutWeight': {}
-      }
-      const weights = processor._getWeights(scoreableComponents);
-      weights.should.eql({
-        'componentWithoutWeight': 1
-      });
-    });
-  });
-
   describe('_getComponentScores', () => {
     it('should returns weighted scores as product of score and weight', () => {
       const scoreableComponents = {
         '1': {},
         '2': {},
         '3': {}
-      }
-      const weights = {
-        '1': 1,
-        '2': 2,
-        '3': 3
       }
       const outcomes = [
         {
@@ -141,74 +103,67 @@ describe('PieAllOrNothingScoringProcessor', () => {
         {
           'id': '2',
           'score': {
-            'scaled': 2
+            'scaled': 1
           }
         },
         {
           'id': '3',
           'score': {
-            'scaled': 3
+            'scaled': 1
           }
         }
       ]
-      const componentScores = processor._getComponentScores(scoreableComponents, weights, outcomes);
+      const componentScores = processor._getComponentScores(scoreableComponents, outcomes);
       componentScores.should.eql([
         {
           'id': '1',
-          'score': 1,
-          'weight': 1,
-          'weightedScore': 1
+          'score': 1
         },
         {
           'id': '2',
-          'score': 2,
-          'weight': 2,
-          'weightedScore': 4
+          'score': 1
         },
         {
           'id': '3',
-          'score': 3,
-          'weight': 3,
-          'weightedScore': 9
+          'score': 1
         }
       ]);
     });
   });
 
-  describe('_sumOfWeights', () => {
-    it('should return 6', () => {
-      const weights = {
-        '1': 1,
-        '2': 2,
-        '3': 3
-      };
-      const sum = processor._sumOfWeights(weights);
-      sum.should.eql(6);
+  describe('_numberOfScoreableComponents', () => {
+    it('should return 3', () => {
+      const scoreableComponents = {
+        '1': {},
+        '2': {},
+        '3': {}
+      }
+      processor._numberOfScoreableComponents(scoreableComponents).should.eql(3);
     });
   });
 
-  describe('_sumOfWeightedScores', () => {
-
-    it('should return 6', () => {
-      const componentScores = {
-        '1': {
-          'weightedScore': 1
+  describe('_numberOfCorrectAnswers', () => {
+    it('should return 2', () => {
+      const componentScores = [
+        {
+          'id': '1',
+          'score': 1
         },
-        '2': {
-          'weightedScore': 2
+        {
+          'id': '2',
+          'score': 1
         },
-        '3': {
-          'weightedScore': 3
+        {
+          'id': '3',
+          'score': 0
         }
-      };
-
-      const sum = processor._sumOfWeightedScores(componentScores);
-      sum.should.eql(6);
+      ];
+      processor._numberOfCorrectAnswers(componentScores).should.eql(2);
     });
   });
 
   describe('_makeSummary', () => {
-    it('should return all, when points == maxPoints', () => {
+    it('should return 100%, when points == maxPoints', () => {
       const summary = processor._makeSummary(7, 7);
       summary.should.eql({
         maxPoints: 7,
@@ -216,7 +171,7 @@ describe('PieAllOrNothingScoringProcessor', () => {
         percentage: 100
       });
     });
-    it('should return nothing, when points < maxPoints', () => {
+    it('should return 0%, when points < maxPoints', () => {
       const summary = processor._makeSummary(7, 6);
       summary.should.eql({
         maxPoints: 7,

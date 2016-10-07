@@ -5,18 +5,16 @@ export default class PieAllOrNothingScoringProcessor {
   }
 
   /**
-   * Calculate the weighted or allOrNothing score
-   * @param pies [{id:'1', weight: 3, ...}, {id:'2', weight: 5, ...}]
+   * Calculate the allOrNothing score
    * @param sessions [{id: '1', ...}, {id: '2', ...}]
    * @param outcomes [{id: '1', score: 1}, {id: '2', score: 2}]
    * @returns {{summary: ({maxPoints, points, percentage}|*), components: *}}
    */
   score(pies, sessions, outcomes) {
     const scoreableComponents = this._getScoreableComponents(pies, sessions, outcomes);
-    const weights = this._getWeights(scoreableComponents);
-    const componentScores = this._getComponentScores(scoreableComponents, weights, outcomes);
-    const maxPoints = this._sumOfWeights(weights);
-    const points = this._sumOfWeightedScores(componentScores);
+    const componentScores = this._getComponentScores(scoreableComponents, outcomes);
+    const maxPoints = this._numberOfScoreableComponents(scoreableComponents);
+    const points = this._numberOfCorrectAnswers(componentScores);
     const summary = this._makeSummary(maxPoints, points);
     return {
       summary,
@@ -42,42 +40,30 @@ export default class PieAllOrNothingScoringProcessor {
     return results;
   }
 
-  _getWeights(scoreableComponents) {
-    const results = {};
-    for (let id in scoreableComponents) {
-      results[id] = scoreableComponents[id].weight || 1;
-    }
-    return results;
-  }
-
-  _getComponentScores(scoreableComponents, weights, outcomes) {
+  _getComponentScores(scoreableComponents, outcomes) {
     const results = [];
     for (let id in scoreableComponents) {
-      const weight = weights[id];
-      const score = this._findById(outcomes, id, {}).score.scaled || 0;
-      const weightedScore = weight * score;
+      const score = this._findById(outcomes, id, {score:{}}).score.scaled || 0;
       results.push({
         id,
-        weight,
-        score,
-        weightedScore
+        score
       });
     }
     return results;
   }
 
-  _sumOfWeights(weights){
+  _numberOfScoreableComponents(scoreableComponents){
     let result = 0;
-    for (let id in weights) {
-      result += weights[id];
+    for (let id in scoreableComponents) {
+      result++;
     }
     return result;
   }
 
-  _sumOfWeightedScores(componentScores){
+  _numberOfCorrectAnswers(componentScores){
     let result = 0;
     for (let id in componentScores) {
-      result += componentScores[id].weightedScore;
+      result += componentScores[id].score === 1 ? 1 : 0;
     }
     return result;
   }
