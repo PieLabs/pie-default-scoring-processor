@@ -6,13 +6,12 @@ export default class PieWeightedScoringProcessor {
 
   /**
    * Calculate the weighted score
-   * @param pies [{id:'1', weight: 3, ...}, {id:'2', weight: 5, ...}]
    * @param sessions [{id: '1', ...}, {id: '2', ...}]
    * @param outcomes [{id: '1', score: 1}, {id: '2', score: 2}]
    * @returns {{summary: ({maxPoints, points, percentage}|*), components: *}}
    */
-  score(pies, sessions, outcomes) {
-    const scoreableComponents = this._getScoreableComponents(pies, sessions, outcomes);
+  score(sessions, outcomes) {
+    const scoreableComponents = this._getScoreableComponents(sessions, outcomes);
     const weights = this._getWeights(scoreableComponents);
     const componentScores = this._getComponentScores(scoreableComponents, weights, outcomes);
     const maxPoints = this._sumOfWeights(weights);
@@ -28,8 +27,9 @@ export default class PieWeightedScoringProcessor {
     return compOutcome && compOutcome.hasOwnProperty('score');
   }
 
-  _getScoreableComponents(pies, sessions, outcomes) {
+  _getScoreableComponents(sessions, outcomes) {
     const results = {};
+    const pies = this._config.pies;
     for (let i = 0; i < pies.length; i++) {
       const compJson = pies[i];
       const compId = compJson.id;
@@ -44,8 +44,9 @@ export default class PieWeightedScoringProcessor {
 
   _getWeights(scoreableComponents) {
     const results = {};
+    const weights = this._config.weights || [];
     for (let id in scoreableComponents) {
-      results[id] = scoreableComponents[id].weight || 1;
+      results[id] = this._findById(weights, id, {}).weight || 1;
     }
     return results;
   }

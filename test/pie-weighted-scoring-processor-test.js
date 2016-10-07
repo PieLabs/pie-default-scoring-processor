@@ -11,20 +11,15 @@ describe('PieWeightedScoringProcessor', () => {
   let processor;
 
   beforeEach((done) => {
-    processor = new ScoringProcessor();
+    processor = new ScoringProcessor({
+      pies:[{id:"1"},{id:"2"},{id:"3"}],
+      weights:[{id:"1", weight: 1},{id:"2", weight: 2},{id:"3", weight: 3}]
+    });
     done();
   });
 
   describe('score', () => {
     it('should calculate the score for all components with outcome', () => {
-      const pies = [
-        {
-          'id': '1'
-        },
-        {
-          'id': '2'
-        }
-      ]
       const sessions = [
         {
           'id': '1'
@@ -38,7 +33,7 @@ describe('PieWeightedScoringProcessor', () => {
           }
         }
       ]
-      let result = processor.score(pies, sessions, outcomes);
+      let result = processor.score(sessions, outcomes);
       result.should.eql({
         components: [
           {
@@ -59,14 +54,6 @@ describe('PieWeightedScoringProcessor', () => {
 
   describe('_getScoreableComponents', () => {
     it('should return all components which we have an outcome for', () => {
-      const pies = [
-        {
-          'id': '1'
-        },
-        {
-          'id': '2'
-        }
-      ]
       const sessions = [
         {
           'id': '1'
@@ -80,7 +67,7 @@ describe('PieWeightedScoringProcessor', () => {
           }
         }
       ]
-      const scoreableComponents = processor._getScoreableComponents(pies, sessions, outcomes);
+      const scoreableComponents = processor._getScoreableComponents(sessions, outcomes);
       scoreableComponents.should.eql({
         '1': {
           'id': '1'
@@ -93,13 +80,10 @@ describe('PieWeightedScoringProcessor', () => {
     it('should return the weights of the components', () => {
       const scoreableComponents = {
         '1': {
-          'weight': 1
         },
         '2': {
-          'weight': 2
         },
         '3': {
-          'weight': 3
         }
       }
       const weights = processor._getWeights(scoreableComponents);
