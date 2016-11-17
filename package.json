@@ -1,6 +1,6 @@
 {
   "name": "pie-scoring",
-  "version": "1.0.0",
+  "version": "1.1.0-prerelease",
   "description": "A scoring processor which returns weighted or all-or-nothing scores",
   "main": "lib/pie-scoring-processor-factory.js",
   "scripts": {
